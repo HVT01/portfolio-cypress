@@ -1,6 +1,6 @@
-# portfolio-cypress
-Portfolio-cypress
+# portfolio-cypress from Thanh-Trung Tran
 This repository demonstrates a **pragmatic and maintainable approach to web test automation** using **Cypress**.
+It reflects how I design test automation in real-world projects as a **Senior QA Engineer **.
 
 ## Overview
 The focus is **not** on covering everything, but on:
@@ -8,8 +8,6 @@ The focus is **not** on covering everything, but on:
 - readability
 - maintainability
 - realistic test strategy
-
-It reflects how I design test automation in real-world projects as a **Senior QA Engineer **.
 
 ## Goals of this Project
 - Showcase clean and stable Cypress-based E2E tests
