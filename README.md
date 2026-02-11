@@ -1,6 +1,5 @@
-# portfolio-cypress from Thanh-Trung Tran
+# Thanh-Trung Tran Portfolio cypress 
 This repository demonstrates a **pragmatic and maintainable approach to web test automation** using **Cypress**.
-It reflects how I design test automation in real-world projects as a **Senior QA Engineer **.
 
 ## Overview
 The focus is **not** on covering everything, but on:
