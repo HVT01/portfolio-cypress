@@ -1,15 +1,72 @@
-stages:
-  - test
+image: cypress/browsers:node18.12.0-chrome107
 
-cypress-e2e:
-  image: cypress/base:18
-  stage: test
-  before_script:
-    - npm ci
+stages:
+  - install
+  - test
+  - report
+
+# Variables für verschiedene Environments
+# -----------------------------
+variables:
+  CYPRESS_baseUrl: "https://portfolio.com"
+  CYPRESS_loginPath: "/login"
+  CYPRESS_dashboardPath: "/dashboard"
+  NODE_ENV: "test"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - cache/Cypress
+
+# ---------------------------
+# INSTALL DEPENDENCIES
+# ---------------------------
+install_dependencies:
+  stage: install
   script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+# ---------------------------
+# E2E TEST EXECUTION
+# ---------------------------
+cypress_e2e_tests:
+  stage: test
+  script:
+    - npx cypress verify
     - npx cypress run --browser chrome --headless
   artifacts:
     when: always
     paths:
-      - cypress/screenshots
-      - cypress/videos
+      - cypress/videos/
+      - cypress/screenshots/
+    expire_in: 7 days
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
+
+# ---------------------------
+# OPTIONAL: PARALLEL EXECUTION
+# ---------------------------
+cypress_parallel:
+  stage: test
+  parallel: 3
+  script:
+    - npx cypress run --record --parallel --browser chrome
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  when: manual
+
+# ---------------------------
+# SIMPLE REPORT STAGE
+# ---------------------------
+generate_report:
+  stage: report
+  script:
+    - echo "Generating summary..."
+  when: always
