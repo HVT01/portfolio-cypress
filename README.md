@@ -1,13 +1,15 @@
-# Thanh-Trung Tran
-# Cypress E2E Test Automation – Portfolio
+# Cypress End-to-End Test Automation
+**Portfolio von Thanh Trung Tran**
 
-## Projektüberblick
-Modulares, skalierbares E2E-Testframework mit Cypress, Cloud- und Container-ready, CI/CD-integriert, Kubernetes-fähig.
+## Portfolio
+
+Dieses Projekt zeigt eine modulare, skalierbare Architektur für End-to-End-Testautomatisierung mit Cypress.  
+Die Tests sind containerisiert (Docker), CI/CD-integriert (GitLab CI) und für eine cloudbasierte Ausführung in Kubernetes-Clustern ausgelegt.
 
 ## Architektur
-- Page Object Model (POM): saubere Trennung UI vs. Testlogik  
-- Custom Commands: wiederverwendbare Test-Utilities  
-- Fixtures: strukturierte Testdaten  
+- Page Object Model (POM): Strukturierung der UI-Interaktionen in wiederverwendbare Seitenobjekte zur Kapselung von Selektoren und Aktionen sowie zur Verbesserung von Wartbarkeit und Lesbarkeit
+- Custom Commands: wiederverwendbare Befehle zur Reduzierung von Redundanz und Erhöhung der Testklarheit
+- Fixtures: Externe Verwaltung von Testressourcen wie Testdaten und UI-Selektoren zur klaren Trennung von Testlogik
 - Utilities: Helper Funktionen, Environment Handling  
 
 ## CI/CD
@@ -19,11 +21,3 @@ Modulares, skalierbares E2E-Testframework mit Cypress, Cloud- und Container-read
 - Dockerfile: Cypress + Browser Container  
 - Kubernetes Deployment & Job: skalierbare, reproduzierbare Testausführung  
 - Cloud-native und DevOps-ready  
-
-## Skills
-Cypress • JavaScript • Docker • Kubernetes • GitLab CI/CD • E2E Automation • Test Architecture • DevOps Integration
-
-## Business Impact
-- Schnellere Feedbackzyklen  
-- Reduzierte manuelle Testaufwände  
-- Höhere Softwarequalität durch automatisierte Regressionstests
