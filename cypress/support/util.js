@@ -1,14 +1,18 @@
 // cypress/support/utils.js
+// --------------------------------------------------------
+// Utility functions for Cypress E2E tests
+// Diese Funktionen helfen beim Generieren von Testdaten,
+// beim Warten auf API-Responses und beim Zugriff auf Env-Variablen
+// --------------------------------------------------------
 
 /**
- * Utility functions for Cypress E2E tests
+ * Utils Object
+ * Enthält alle Hilfsfunktionen
  */
-
 const Utils = {
-
   /**
-   * Generate a random string
-   * @param {number} length
+   * Generiert einen zufälligen String
+   * @param {number} length - Länge des Strings
    * @returns {string}
    */
   randomString(length = 8) {
@@ -21,8 +25,8 @@ const Utils = {
   },
 
   /**
-   * Generate a random email address
-   * @param {string} domain
+   * Generiert eine zufällige E-Mail-Adresse
+   * @param {string} domain - Domain der E-Mail (default: example.com)
    * @returns {string}
    */
   randomEmail(domain = 'example.com') {
@@ -30,7 +34,7 @@ const Utils = {
   },
 
   /**
-   * Get timestamp in format YYYYMMDD_HHMMSS
+   * Gibt einen Zeitstempel im Format YYYYMMDD_HHMMSS zurück
    * @returns {string}
    */
   timestamp() {
@@ -40,10 +44,10 @@ const Utils = {
   },
 
   /**
-   * Wait for an API response with a specific status code
-   * @param {string} url
-   * @param {number} status
-   * @param {number} timeout
+   * Wartet auf eine API-Response mit einem bestimmten Status-Code
+   * @param {string} url - API URL
+   * @param {number} status - erwarteter Statuscode (default: 200)
+   * @param {number} timeout - Timeout in ms (default: 10000)
    */
   waitForApi(url, status = 200, timeout = 10000) {
     cy.request({
@@ -56,9 +60,9 @@ const Utils = {
   },
 
   /**
-   * Get environment variable or fallback
-   * @param {string} key
-   * @param {any} fallback
+   * Liest eine Umgebungsvariable aus Cypress.env() oder liefert Fallback
+   * @param {string} key - Name der Variable
+   * @param {any} fallback - Wert, falls Variable nicht gesetzt ist (default: '')
    * @returns {string}
    */
   getEnv(key, fallback = '') {
@@ -66,4 +70,9 @@ const Utils = {
   }
 }
 
+// --------------------------------------------------------
+// Export als Default für ES Modules
+// Import in Testfiles:
+// import Utils from '../support/utils'
+// --------------------------------------------------------
 export default Utils

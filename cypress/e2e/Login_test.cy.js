@@ -9,7 +9,7 @@ describe('Portfolio Sample Test', () => {
   before(() => {
     // Testdaten aus Fixture laden
     cy.fixture('user').then((user) => {
-      cy.wrap(user).as('userData')
+      this.userData = user
     })
   })
 
@@ -26,10 +26,7 @@ describe('Portfolio Sample Test', () => {
 
   it('Example of Custom Command', function () {
     // Custom Command: cy.login(username, password)
-    //cy.login('admin','1234')
-    console.log(this.userData.username);    
     cy.login(this.userData.username, this.userData.password)
-
     cy.url().should('include', '/dashboard')
     cy.get('.welcome-message').should('exist')
   })
