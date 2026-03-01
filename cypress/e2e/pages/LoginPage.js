@@ -5,7 +5,7 @@ class LoginPage {
   submitButton = 'button[type="submit"]'
 
   // Methoden
-  visit() { cy.visit('/login') 
+  visit() { cy.visit('/') 
     // Zugriff auf Cypress Config
     //cy.visit(Cypress.env('loginPath') || '/login')
     // Cypress.env liest automatisch die Env-Variablen aus dem Container
