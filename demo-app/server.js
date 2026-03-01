@@ -16,4 +16,4 @@ app.post('/api/login', (req, res) => {
   res.status(401).json({ success: false })
 })
 
-app.listen(3000, () => console.log('App running on port 3000'))
+app.listen(3000, '0.0.0.0', () => console.log('App running on port 3000'))
