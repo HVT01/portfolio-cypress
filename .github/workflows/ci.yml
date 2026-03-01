@@ -26,10 +26,9 @@ jobs:
 
       # 3 Demo-App starten und Cypress Tests ausführen      
       - name: Run Cypress
-        run: npx start-server-and-test "npm start" http://localhost:3000 "npx cypress verify"
-        #"npx cypress run --browser chrome --headless"
-
-      # 3 Artefakte hochladen
+        run: npx start-server-and-test "npm start" http://localhost:3000 "npx cypress run --browser chrome --headless"
+      
+      # 4 Artefakte hochladen
       - name: Upload Cypress artifacts
         if: always()
         uses: actions/upload-artifact@v4
