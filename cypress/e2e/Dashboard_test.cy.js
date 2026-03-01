@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
-import LoginPage from '../pages/LoginPage'
-import DashboardPage from '../pages/DashboardPage'
-import FormPage from '../pages/FormPage'
+import LoginPage from './pages/LoginPage'
+import DashboardPage from './pages/DashboardPage'
+import FormPage from './pages/FormPage'
 import Utils from '../support/utils'
 
 describe('Enterprise Portfolio E2E Tests', () => {
