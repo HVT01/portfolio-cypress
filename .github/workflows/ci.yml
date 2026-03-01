@@ -26,11 +26,11 @@ jobs:
 
       # 3 Demo-App starten und Cypress Tests ausführen
       - name: Start App
-        run: |
-          npm start &
-          npx wait-on http://localhost:3000      
-          npx cypress verify
-          npx cypress run --browser chrome --headless
+      - uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          wait-on: http://localhost:3000
+          browser: chrome
 
       # 6 Artefakte hochladen
       - name: Upload Cypress artifacts
