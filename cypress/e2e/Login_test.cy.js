@@ -26,7 +26,8 @@ describe('Portfolio Sample Test', () => {
 
   it('Example of Custom Command', function () {
     // Custom Command: cy.login(username, password)
-    cy.login(this.userData.username, this.userData.password)
+    cy.login('admin','1234')
+    //cy.login(this.userData.username, this.userData.password)
 
     cy.url().should('include', '/dashboard')
     cy.get('.welcome-message').should('exist')
