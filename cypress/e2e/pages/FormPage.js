@@ -1,9 +1,9 @@
-// cypress/pages/FormPage.js
+// cypress/e2e/pages/FormPage.js
 
 class FormPage {
 
   visit() {
-    cy.visit('/form')
+    cy.visit('/form.html')
   }
 
   fillField(fieldName, value) {

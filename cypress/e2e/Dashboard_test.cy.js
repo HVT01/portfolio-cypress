@@ -13,7 +13,7 @@ describe('Dashboard-Tests', () => {
 
   beforeEach(() => {
     cy.fixture('user').as('userData')
-    cy.fixture('formData').as('formData')
+    cy.fixture('formData').as('form')
   })
 
   it('Login and Dashboard Checks', function () {
@@ -37,7 +37,9 @@ describe('Dashboard-Tests', () => {
 
   it('Form Submission Test', function () {
     form.visit()
-    Object.entries(this.formData).forEach(([field, value]) => {
+    cy.url().should('include', 'form.html')
+    cy.get('[name="firstName"]').should('exist')
+    Object.entries(this.form).forEach(([field, value]) => {
       if (field === 'country') {
         form.selectDropdown(field, value)
       } else {
