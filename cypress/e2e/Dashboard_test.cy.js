@@ -37,7 +37,7 @@ describe('Dashboard-Tests', () => {
 
   it('Form Submission Test', function () {
     form.visit()
-    Object.entries(formData).forEach(([field, value]) => {
+    Object.entries(this.formData).forEach(([field, value]) => {
       if (field === 'country') {
         form.selectDropdown(field, value)
       } else {
