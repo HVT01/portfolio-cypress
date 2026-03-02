@@ -2,7 +2,7 @@
 
 import LoginPage from './pages/LoginPage'
 
-describe('Portfolio Sample Test', () => {
+describe('Login-Test', () => {
   
   const loginPage = new LoginPage()
 
