@@ -11,9 +11,9 @@ describe('Dashboard-Tests', () => {
   const dashboard = new DashboardPage()
   const form = new FormPage()
 
-  before(() => {
-    cy.fixture('user').then((user) => cy.wrap(user).as('userData'))
-    cy.fixture('form').as('formData')
+  beforeEach(() => {
+    cy.fixture('user').as('userData')
+    cy.fixture('formData').as('formData')
   })
 
   it('Login and Dashboard Checks', function () {

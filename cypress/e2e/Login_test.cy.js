@@ -6,10 +6,8 @@ describe('Login-Test', () => {
   
   const loginPage = new LoginPage()
 
-  before(function () {
-  cy.fixture('user').then((user) => {
-    this.userData = user
-  })
+  beforeEach(() => {
+    cy.fixture('user').as('userData')    
   })
 
   it('Login Flow with Page Object', function () {
