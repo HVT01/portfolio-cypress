@@ -12,6 +12,11 @@ class DashboardPage {
 
   openSettings() {
     cy.get('#settings-button').click()
+    // cy.get('button').contains('Settings').click()
+    // cy.contains('button', 'Settings').click()    -   robuster als mit ID
+    cy.get('body').then(($body) => {
+    console.log($body.html())
+  })
   }
 
   getWidget(name) {

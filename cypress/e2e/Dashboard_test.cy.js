@@ -22,6 +22,13 @@ describe('Dashboard-Tests', () => {
     loginPage.fillPassword(this.userData.password)
     loginPage.submit()
 
+    //-------------------------------------------
+    // Warten bis Dashboard wirklich da ist
+    cy.url().should('include', 'dashboard.html')
+    cy.get('.welcome-message').should('exist')
+    cy.get('#settings-button').should('exist')
+    //-------------------------------------------
+    
     dashboard.getWelcomeMessage().should('contain.text', this.userData.username)
     dashboard.getWidget('Sales Overview').should('exist')
     dashboard.openSettings()
