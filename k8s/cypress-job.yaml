@@ -4,13 +4,13 @@ metadata:
   name: cypress-run
   namespace: cypress-e2e
 spec:
-  completions: 20
-  parallelism: 20
+  completions: 3
+  parallelism: 3
   template:
     spec:
       containers:
         - name: cypress
-          image: registry.gitlab.com/<username>/<projectname>/cypress-tests-image:latest
+          image: $CI_REGISTRY_IMAGE/cypress-tests-image:latest
           # Environment Variables für URLs
           env:
             - name: CYPRESS_baseUrl
@@ -28,6 +28,11 @@ spec:
               # Warten bis App auf localhost:3000 bereit ist
               npx wait-on http://localhost:3000
               # Cypress headless ausführen
-              npx cypress run --browser chrome --headless
+              npx cypress run \
+                --record \
+                --parallel \
+                --browser chrome \
+                --headless \
+                --ci-build-id $CI_PIPELINE_ID
       restartPolicy: Never
   backoffLimit: 1

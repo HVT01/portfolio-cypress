@@ -45,4 +45,18 @@ jobs:
           path: |
             results
             cypress/videos
-            cypress/screenshots
+            cypress/screenshots      
+          
+      - name: Publish Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Cypress Tests
+          path: results/junit.xml
+          reporter: java-junit           
+
+      - name: Add Summary
+        if: always()
+        run: |
+            echo "## Cypress Test Results" >> $GITHUB_STEP_SUMMARY
+            echo "See detailed report above." >> $GITHUB_STEP_SUMMARY

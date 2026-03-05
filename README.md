@@ -12,8 +12,8 @@ Die E2E-Tests sind containerisiert mit Docker, kontinuierlich in CI/CD-Pipelines
 - Utilities: Helper Funktionen, Environment Handling  
 
 ## CI/CD
-- GitLab CI/CD Pipeline mit build → test → report stages  
-- Artefakt-Sicherung: Screenshots, Videos  
+- GitLab CI/CD Pipeline mit build → test stages  
+- Artefakt-Sicherung: Screenshots, Videos und Reports  
 - MR-Trigger und Headless Execution  
 
 ## Kubernetes & Containerization

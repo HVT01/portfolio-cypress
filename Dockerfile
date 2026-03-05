@@ -1,7 +1,8 @@
+# ---------- Builder Stage ----------
 # ----------------------------------
 # Base Image mit Node + Browsern
 # ----------------------------------
-FROM cypress/browsers:node18.12.0-chrome107-ff106
+FROM cypress/browsers:node18.12.0-chrome107-ff106 AS builder
 
 # ----------------------------------
 # Arbeitsverzeichnis
@@ -17,7 +18,7 @@ COPY package.json package-lock.json ./
 # Dependencies installieren
 # ----------------------------------
 RUN npm ci
-
+RUN npx cypress install
 # ----------------------------------
 # Restlichen Code kopieren
 # ----------------------------------
@@ -36,6 +37,12 @@ ENV CYPRESS_baseUrl="http://localhost:3000"
 ENV CYPRESS_loginPath="/login"
 ENV CYPRESS_dashboardPath="/dashboard"
 
+# ---------- Runtime Stage ----------
+FROM cypress/browsers:node18.12.0-chrome107-ff106
+
+WORKDIR /app
+
+COPY --from=builder /app /app   
 # ----------------------------------
 # Local Tests Execution
 # ----------------------------------

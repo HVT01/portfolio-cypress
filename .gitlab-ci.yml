@@ -5,12 +5,12 @@ stages:
 # Variables
 # -----------------------------
 variables:
-  CYPRESS_baseUrl: "https://portfolio.com"
+  CYPRESS_baseUrl: "http://localhost:3000"
   CYPRESS_loginPath: "/login"
   CYPRESS_dashboardPath: "/dashboard"
   NODE_ENV: "test"
   CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
-  IMAGE_NAME: registry.gitlab.com/<username>/<projectname>/cypress-tests-image
+  IMAGE_NAME: $CI_REGISTRY_IMAGE/cypress-tests-image    # $CI_REGISTRY_IMAGE = registry.gitlab.com/<gruppe>/<projekt>
   RUN_IN_CLUSTER: "true"
 
 cache:
@@ -25,11 +25,16 @@ build-image:
   stage: build
   image: docker:24
   services:
-    - docker:24-dind
+    - docker:24-dind    # Alternative Kaniko oder BuildKit
   script:
     - docker build -t $IMAGE_NAME:$CI_COMMIT_SHA .
+    - docker tag $IMAGE_NAME:$CI_COMMIT_SHA $IMAGE_NAME:latest
     - docker push $IMAGE_NAME:$CI_COMMIT_SHA
-
+    - docker push $IMAGE_NAME:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    
 # ---------------------------
 # Tests laufen entweder in Job der CI/CD-Pipelines oder Kubernetes-Cluster
 # Option 1 - Tests in Pipelines laufen
@@ -37,13 +42,14 @@ build-image:
 # ---------------------------
 cypress_e2e_tests:
   stage: test
+  needs:
+    - build-image
   image: $IMAGE_NAME:$CI_COMMIT_SHA
-  script:
-    - npm ci    # installiert alle devDependencies
-    - npm start &   # Demo-app im Hintergrund starten
-    - npx wait-on http://localhost:3000    
-    - npx cypress verify
-    - npx cypress run --browser chrome --headless
+  script:    
+    - npx start-server-and-test start http://localhost:3000 cypress run --browser chrome --headless
+    #- npm start &   # Demo-app im Hintergrund starten
+    #- npx wait-on http://localhost:3000    
+    #- npx cypress run --browser chrome --headless
   artifacts:
     when: always
     paths:
@@ -64,11 +70,9 @@ cypress_parallel:
   stage: test
   image: $IMAGE_NAME:$CI_COMMIT_SHA
   parallel: 3
-  script:
-    - npm ci
+  script:    
     - npm start &   # Demo-app mit URL http://localhost:3000 verfügbar machen
-    - npx wait-on http://localhost:3000 
-    - npx cypress verify
+    - npx wait-on http://localhost:3000    
     - npx cypress run --record --parallel --browser chrome --ci-build-id $CI_PIPELINE_ID
   artifacts:
     when: always
@@ -89,7 +93,7 @@ e2e_tests_cluster:
   stage: test
   image: bitnami/kubectl:latest
   script:
-    - kubectl apply -f k8s/job.yaml
+    - kubectl apply -f k8s/cypress-job.yaml
     - kubectl wait --for=condition=complete job/cypress-run --timeout=300s
     # Pod-Namen holen
     - POD_NAME=$(kubectl get pods -l job-name=cypress-run -o jsonpath="{.items[0].metadata.name}")    
