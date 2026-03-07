@@ -54,7 +54,7 @@ jobs:
         if: always()
         run: |
           npx mochawesome-merge results/*.json > results/report.json
-          npx marge results/report.json -f report -o results
+          npx marge results/report.json -f report -o results      
 
       - name: Upload HTML Report
         if: always()
@@ -71,7 +71,7 @@ jobs:
         uses: dorny/test-reporter@v1
         with:
           name: Cypress Tests
-          path: results/*.xml
+          path: results/*.*
           reporter: java-junit
           max-annotations: 10                   
 
