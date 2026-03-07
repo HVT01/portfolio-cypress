@@ -16,7 +16,7 @@ module.exports = defineConfig({
     mochawesomeReporterOptions: {
       reportDir: "results",
       overwrite: false,
-      html: true,
+      html: false,
       json: true,
       reportTitle: "Cypress Test Report",
       embeddedScreenshots: true,

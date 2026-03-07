@@ -74,14 +74,7 @@ jobs:
           path: |
             results
             cypress/videos
-            cypress/screenshots          
-
-      - name: Upload HTML Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-html-report
-          path: results/report.html
+            cypress/screenshots   
 
       - name: Fix Git safe directory
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
@@ -93,4 +86,4 @@ jobs:
           name: Cypress Tests
           path: results/*.xml
           reporter: java-junit
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN_CYPRESS }}
