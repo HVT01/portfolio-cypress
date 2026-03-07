@@ -59,8 +59,9 @@ jobs:
       - name: Merge Mochawesome reports
         if: always()
         run: |
-          npx mochawesome-merge results/*.json > results/report.json
-          npx marge results/report.json -f report -o results  
+          npx mochawesome-merge results/*.json -o results/report.json
+          npx mochawesome-report-generator results/report.json --reportDir results --reportFilename report
+          ls -lh results
       
       - name: List files in results folder
         run: ls -R results
