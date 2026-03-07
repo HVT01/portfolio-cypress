@@ -39,10 +39,17 @@ jobs:
       - name: Run Cypress Tests
         run: npx cypress run --browser chrome --headless
         
+      - name: List files in results folder
+        run: ls -R results
+      
       - name: Rename JUnit files
         run: |
           for file in results/junit-*.xml; do
-          SPEC_NAME=$(grep -oP '(?<=<testsuite name=")[^"]+' "$file" | head -1)
+          # Extract the spec filename from the <testsuite file="..."> attribute
+          SPEC_NAME=$(grep -oP '(?<=file=")[^"]+' "$file" | head -1)
+          # Entferne Pfad und Dateiendung
+          SPEC_NAME=$(basename "$SPEC_NAME" .cy.js)
+          # Datei umbenennen
           mv "$file" "results/junit-$SPEC_NAME.xml"
           done
 
@@ -85,10 +92,5 @@ jobs:
         with:
           name: Cypress Tests
           path: results/*.xml
-          reporter: java-junit                
-
-      - name: Add summary
-        if: always()
-        run: |
-          echo "## Cypress Test Report" >> $GITHUB_STEP_SUMMARY
-          echo "[Download HTML Report](./results/report.html)" >> $GITHUB_STEP_SUMMARY
+          reporter: java-junit
+          token: ${{ secrets.GITHUB_TOKEN }}
