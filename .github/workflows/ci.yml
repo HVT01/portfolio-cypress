@@ -60,8 +60,10 @@ jobs:
         if: always()
         run: |
           npx mochawesome-merge results/*.json -o results/report.json
-          npx mochawesome-report-generator results/report.json --reportDir results --reportFilename report
-          ls -lh results
+          npx mochawesome-report-generator results/report.json \
+          --reportDir results \
+          --reportFilename report \
+          --inline
       
       - name: List files in results folder
         run: ls -R results
@@ -75,16 +77,4 @@ jobs:
           path: |
             results
             cypress/videos
-            cypress/screenshots   
-
-      - name: Fix Git safe directory
-        run: git config --global --add safe.directory $GITHUB_WORKSPACE
-
-      - name: Publish Test Report
-        if: always()
-        uses: dorny/test-reporter@v1
-        with:
-          name: Cypress Tests
-          path: results/*.xml
-          reporter: java-junit
-          token: ${{ secrets.GH_TOKEN_CYPRESS }}
+            cypress/screenshots
