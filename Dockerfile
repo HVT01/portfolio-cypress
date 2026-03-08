@@ -24,11 +24,6 @@ RUN npx cypress install
 # ----------------------------------
 COPY . .
 
-# ----------------------------------
-# Cypress Verify
-# ----------------------------------
-RUN npx cypress verify
-
 # Verzeichnis für Reports vorbereiten
 RUN mkdir -p /app/results /app/cypress/screenshots /app/cypress/videos
 
