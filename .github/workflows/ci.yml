@@ -35,7 +35,10 @@ jobs:
 
       - name: Build image
         run: |
-          docker build -t ${{ steps.vars.outputs.image }}:${{ github.sha }} .
+          docker build \
+          --cache-from=${{ steps.vars.outputs.image }}:latest \
+          -t ${{ steps.vars.outputs.image }}:${{ github.sha }} \
+          -t ${{ steps.vars.outputs.image }}:latest .
 
       - name: Push image
         run: |
@@ -67,12 +70,30 @@ jobs:
         run: |
           IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
           docker run -d -p 3000:3000 $IMAGE:${{ github.sha }}
+
+      - name: Check containers
+        run: docker ps -a
+
+      - name: Container logs
+        run: docker logs $(docker ps -q)
+
+      - name: Show containers
+        run: docker ps -a
+
+      - name: Show logs
+        run: docker logs $(docker ps -q)
+
+      - name: Test endpoint 3000
+        run: curl -v http://localhost:3000
+
+      - name: Test endpoint 8080
+        run: curl -v http://localhost:8080
       
       - name: Fix permissions
         run: chmod +x node_modules/.bin/*
       
       - name: Start App
-        run: npx -y wait-on http://localhost:3000
+        run: npx -y wait-on http://localhost:3000 -t 60000
 
       - name: Run Cypress Tests
         run: npx cypress run --browser chrome --headless        
@@ -154,7 +175,10 @@ jobs:
       - name: Setup kubeconfig
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig >> $GITHUB_ENV
+
+      - name: Test cluster connection
+        run: kubectl get nodes
 
       - name: Run Cypress job in cluster
         run: |

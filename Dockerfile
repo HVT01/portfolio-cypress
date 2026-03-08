@@ -42,4 +42,4 @@ COPY --from=builder /app /app
 # ----------------------------------
 # Local Tests Execution
 # ----------------------------------
-CMD ["npx", "cypress", "run", "--browser", "chrome", "--headless"]
+CMD ["npm","start"]
