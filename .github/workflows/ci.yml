@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/app
+  IMAGE_NAME: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app
   RUN_CYPRESS_CLUSTER: "true"
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
     needs: build-image
     runs-on: ubuntu-latest
     container:
-      image: $(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]'):${{ github.sha }}
+      image: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app:${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
 
