@@ -155,4 +155,4 @@ jobs:
 
       - name: Run Cypress job in cluster
         run: |
-          kubectl apply -f k8s/cypress-job.yml
+          kubectl apply -f k8s/cypress-job2.yml

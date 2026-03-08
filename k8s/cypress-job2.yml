@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cypress-run
+  namespace: cypress-e2e
+spec:
+  completions: 3
+  parallelism: 3
+  template:
+    spec:
+      containers:
+        - name: cypress
+          image: $(echo "${ghcr.io/${{ github.repository }}/app}" | tr '[:upper:]' '[:lower:]'):${{ github.sha }}
+          # Environment Variables für URLs
+          env:
+            - name: CYPRESS_baseUrl
+              value: "http://localhost:3000"   # Base URL für Tests
+            - name: CYPRESS_loginPath
+              value: "/login"
+            - name: CYPRESS_dashboardPath
+              value: "/dashboard"
+            - name: CYPRESS_RECORD_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cypress-secret
+                  key: record-key
+          command:
+            - sh
+            - -c
+            - |
+              # App im Hintergrund starten
+              node app/server.js &
+              # Warten bis App auf localhost:3000 bereit ist
+              npx wait-on http://localhost:3000
+              # Cypress headless ausführen
+              npx cypress run \
+                --record \
+                --parallel \
+                --browser chrome \
+                --headless \
+                --ci-build-id $CI_PIPELINE_ID
+      restartPolicy: Never
+  backoffLimit: 1
