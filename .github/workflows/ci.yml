@@ -10,6 +10,7 @@ on:
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/app
+  RUN_CYPRESS_CLUSTER: "true"
 
 jobs:
   # -----------------------------
@@ -69,7 +70,7 @@ jobs:
       - name: Start container
         run: |
           IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
-          docker run -d -p 3000:3000 $IMAGE:${{ github.sha }}
+          docker run -d -p 3000:3000 $IMAGE:${{ github.sha }} --name demo-app
 
       - name: Check containers
         run: docker ps -a
@@ -164,6 +165,7 @@ jobs:
 # ------------------------------------------------
   cypress-cluster:
     needs: build-image
+    
     runs-on: ubuntu-latest
 
     container:
@@ -178,7 +180,7 @@ jobs:
           export KUBECONFIG=$PWD/kubeconfig >> $GITHUB_ENV
 
       - name: Test cluster connection
-        run: kubectl get nodes
+        run: KUBECONFIG=$PWD/kubeconfig kubectl get nodes
 
       - name: Run Cypress job in cluster
         run: |
