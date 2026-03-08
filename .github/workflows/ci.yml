@@ -69,9 +69,7 @@ jobs:
           docker run -d -p 3000:3000 $IMAGE:${{ github.sha }}
       
       - name: Start App
-        run: |
-          npm start &
-          npx wait-on http://localhost:3000
+        run: npx wait-on http://localhost:3000
 
       - name: Run Cypress Tests
         run: npx cypress run --browser chrome --headless        
@@ -127,11 +125,9 @@ jobs:
       run: |
         IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
         docker run -d -p 3000:3000 $IMAGE:${{ github.sha }}
-        
+
     - name: Start App
-      run: |
-          npm start &
-          npx wait-on http://localhost:3000
+      run: npx wait-on http://localhost:3000
 
     - name: Run Cypress parallel
       run: |
@@ -159,4 +155,4 @@ jobs:
 
       - name: Run Cypress job in cluster
         run: |
-          kubectl apply -f k8s/cypress-job.yaml
+          kubectl apply -f k8s/cypress-job.yml
