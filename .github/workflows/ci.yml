@@ -158,9 +158,9 @@ jobs:
       with:
         install: false
         # pass the machine index and the total number
-        env: | 
-          SPLIT: ${{ strategy.job-total }}
-          SPLIT_INDEX: ${{ strategy.job-index }}
+      env:
+          CYPRESS_PARALLEL_TOTAL: ${{ matrix.machine }}  # Anzahl Runner
+          CYPRESS_PARALLEL_INDEX: ${{ matrix.machine }}  # Index
 
   # ------------------------------------------------
 # CYPRESS TEST IN KUBERNETES
