@@ -87,7 +87,7 @@ jobs:
       
       - name: Start App
         run: |
-          npm install   # falls noch nötig, z.B. node_modules
+          # npm install   # falls noch nötig, z.B. node_modules
           npm start &   # App im Hintergrund
           npx wait-on http://localhost:3000 -t 60000
 
@@ -149,6 +149,7 @@ jobs:
     - name: Start App
       
       run: |        
+        npm install  
         npm start &   # App im Hintergrund
         npx wait-on http://localhost:3000
 
