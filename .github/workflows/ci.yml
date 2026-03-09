@@ -151,18 +151,13 @@ jobs:
       run: |        
         npm ci          
         npm start &   # App im Hintergrund
-        npx wait-on http://localhost:3000
-
-    - name: Debug split
-      run: |
-        echo "splitIndex = ${{ matrix.machine }}"
-        echo "splitTotal = 2"
+        npx wait-on http://localhost:3000    
     
     - name: Run Cypress parallel
       run: |
         npx cypress run \
         --browser chrome --headless \
-        --env split=true,splitIndex=${{ matrix.machine }},splitTotal=2
+        --env split=true,splitIndex=[0,1],splitTotal=2
 
   # ------------------------------------------------
 # CYPRESS TEST IN KUBERNETES
