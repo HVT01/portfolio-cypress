@@ -144,7 +144,7 @@ jobs:
     - name: Start container
       run: |
         IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
-        docker run -d -p 3000:3000 $IMAGE:${{ github.sha }}
+        docker run -p 3000:3000 $IMAGE:${{ github.sha }}
 
     - name: Start App
       
