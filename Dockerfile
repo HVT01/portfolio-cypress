@@ -20,6 +20,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 RUN npx cypress install
 RUN npm install --save-dev wait-on
+RUN RUN npm install -g wait-on
 RUN npm install
 # ----------------------------------
 # Restlichen Code kopieren

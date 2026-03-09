@@ -150,7 +150,7 @@ jobs:
       
       run: |        
         npm start &   # App im Hintergrund
-        npx wait-on http://localhost:3000
+        wait-on http://localhost:3000
 
     - name: Run Cypress parallel
       run: |
@@ -161,25 +161,25 @@ jobs:
   # ------------------------------------------------
 # CYPRESS TEST IN KUBERNETES
 # ------------------------------------------------
-  cypress-cluster:
-    needs: build-image
-    
-    runs-on: ubuntu-latest
+#  cypress-cluster:
+ #   needs: build-image
+  #  
+   # runs-on: ubuntu-latest
 
-    container:
-      image: bitnami/kubectl:latest
+    #container:
+     # image: bitnami/kubectl:latest
 
-    steps:
-      - uses: actions/checkout@v4
+    #steps:
+     # - uses: actions/checkout@v4
 
-      - name: Setup kubeconfig
-        run: |
-          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig >> $GITHUB_ENV
+      #- name: Setup kubeconfig
+       # run: |
+        #  echo "{{ secrets.KUBE_CONFIG }}" > kubeconfig
+         # export KUBECONFIG=$PWD/kubeconfig >> $GITHUB_ENV
 
-      - name: Test cluster connection
-        run: KUBECONFIG=$PWD/kubeconfig kubectl get nodes
+     # - name: Test cluster connection
+      #  run: KUBECONFIG=$PWD/kubeconfig kubectl get nodes
 
-      - name: Run Cypress job in cluster
-        run: |
-          kubectl apply -f k8s/cypress-job2.yml
+      #- name: Run Cypress job in cluster
+       # run: |
+        #  kubectl apply -f k8s/cypress-job2.yml
