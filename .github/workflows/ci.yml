@@ -91,7 +91,7 @@ jobs:
           npx wait-on http://localhost:3000 -t 60000
 
       - name: Run Cypress Tests
-        run: npx cypress run --browser chrome --headless --env split=false 
+        run: npx cypress run --browser chrome --headless
          
       - name: Rename JUnit files
         run: |
@@ -153,11 +153,14 @@ jobs:
         npm start &   # App im Hintergrund
         npx wait-on http://localhost:3000    
     
-    - name: Run Cypress parallel
-      run: |
-        npx cypress run \
-        --browser chrome --headless \
-        --env split=true,splitIndex=${{matrix.machine}},splitTotal=2
+    - name: Run Cypress tests 
+      uses: cypress-io/github-action@v5
+      with:
+        install: false
+        # pass the machine index and the total number
+        env: | 
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
 
   # ------------------------------------------------
 # CYPRESS TEST IN KUBERNETES
