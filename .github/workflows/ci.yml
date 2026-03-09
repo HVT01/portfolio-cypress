@@ -82,12 +82,11 @@ jobs:
       #- name: Fix permissions
       #  run: chmod +x node_modules/.bin/*
       
-      - name: Install dependencies
-        run: npm ci
+      #- name: Install dependencies
+       # run: npm ci
       
       - name: Start App
         run: |
-          # npm install   # falls noch nötig, z.B. node_modules
           npm start &   # App im Hintergrund
           npx wait-on http://localhost:3000 -t 60000
 
