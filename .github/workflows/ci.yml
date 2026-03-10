@@ -202,9 +202,14 @@ jobs:
       matrix:
         containers: [1, 2]
     steps:
-      - name: Checkout 🛎
+      - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Start demo app
+        run: |
+          npm start &
+          npx wait-on http://localhost:3000
+      
       - name: Run split Cypress E2E tests        
         uses: cypress-io/github-action@v6        
         # using operating system process environment variables
