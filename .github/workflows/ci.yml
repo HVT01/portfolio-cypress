@@ -153,14 +153,16 @@ jobs:
         npm start &   # App im Hintergrund
         npx wait-on http://localhost:3000    
     
-    - name: Run Cypress tests 
-      uses: cypress-io/github-action@v5
-      with:
-        install: false
-        # pass the machine index and the total number
-      env:
-          CYPRESS_PARALLEL_TOTAL: ${{ matrix.machine }}  # Anzahl Runner
-          CYPRESS_PARALLEL_INDEX: ${{ matrix.machine }}  # Index
+    - name: Debug env
+      run: |
+        echo "machine=${{ matrix.machine }}"    
+
+    - name: Run Cypress tests  #uses: cypress-io/github-action@v5 
+      run: |
+          npx cypress run \
+          --browser chrome \
+          --headless \
+          --env split=true,splitIndex=${{ matrix.machine }},splitTotal=2
 
   # ------------------------------------------------
 # CYPRESS TEST IN KUBERNETES

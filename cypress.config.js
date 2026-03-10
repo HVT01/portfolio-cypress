@@ -30,9 +30,17 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.js",
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
 
-    setupNodeEvents(on, config) {
-      // Plugins oder Tasks können hier registriert werden
-      cypressSplit(on, config);      
+    setupNodeEvents(on, config) {      
+      if (config.env.split === "true") {
+        console.log(
+          "Split:",
+          config.env.splitIndex,
+          "/",
+          config.env.splitTotal
+        )
+
+        cypressSplit(on, config)
+      }
       return config;
     }
   },
