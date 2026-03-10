@@ -127,7 +127,8 @@ jobs:
   cypress-parallel:
     needs: build-image
     runs-on: ubuntu-latest
-
+    container:
+      image: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -136,15 +137,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Pull image
-      run: |
-        IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')
-        docker pull $IMAGE:${{ github.sha }}
+    #- name: Pull image
+    #  run: |
+    #    IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')
+    #    docker pull $IMAGE:{{ github.sha }}
 
-    - name: Start container
-      run: |
-        IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
-        docker run -p 3000:3000 $IMAGE:${{ github.sha }}
+    #- name: Start container
+    #  run: |
+    #    IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
+    #    docker run -p 3000:3000 $IMAGE:{{ github.sha }}
 
     - name: Start App
       
@@ -204,7 +205,7 @@ jobs:
         elif [ "${{ matrix.machine }}" = "1" ]; then
           npx cypress run --spec "cypress/e2e/Dashboard_test.cy.js"
         else
-          npx cypress run --spec "cypress/e2e/Form_test.cy.js"
+          npx cypress run --spec "cypress/e2e/Form1_test.cy.js"
         fi        
 
   cypress-parallel-environment:
