@@ -162,7 +162,9 @@ jobs:
           npx cypress run \
           --browser chrome \
           --headless \
-          --env split=true,splitIndex=${{ matrix.machine }},splitTotal=4
+          --env split=true,splitIndex=${{ matrix.machine }},splitTotal=4 \
+          --spec "cypress/e2e/**/*.cy.js"
+
   
   cypress-parallel-manual-split:
     needs: build-image
