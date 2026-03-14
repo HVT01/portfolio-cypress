@@ -32,14 +32,10 @@ module.exports = defineConfig({
 
     setupNodeEvents(on, config) {      
       console.log("ENV:", config.env)
-      if (config.env.split) {
-        console.log(
-          "Split:",
-          config.env.splitIndex,
-          "/",
-          config.env.splitTotal
-        )
+      const split = Number(config.env.SPLIT)
 
+      if (!Number.isNaN(split) && split > 0) {
+        console.log("Split:", split, "Index:", config.env.splitIndex, "/", config.env.splitTotal)
         cypressSplit(on, config)
       }
       return config;
