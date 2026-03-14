@@ -227,7 +227,9 @@ jobs:
           echo "Detected and sorted specs: $SPECS"
   
   cypress-parallel-without-cypress-split:
-    needs: find-specs
+    needs: 
+      - find-specs
+      - build-image
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app:${{ github.sha }}
@@ -379,17 +381,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Pull image
-        run: |
-          IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')
-          docker pull $IMAGE:${{ github.sha }}
-
-      - name: Start container
-        run: |
-          IMAGE=$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')  
-          docker run -p 3000:3000 $IMAGE:${{ github.sha }}
-      
+            
       - name: Install dependencies
         run: npm ci
       
