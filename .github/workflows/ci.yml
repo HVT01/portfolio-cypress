@@ -307,10 +307,10 @@ jobs:
 
       - name: Generate HTML report
         run: |
-          npx mochawesome-report-generator merged-report.json \
-            --reportDir final-report \
-            --reportFilename index \
-            --inline
+          node node_modules/mochawesome-report-generator/bin/marge.js merged-report.json \
+          --reportDir final-report \
+          --reportFilename index \
+          --inline
 
       - name: Upload final report
         uses: actions/upload-artifact@v4
@@ -408,7 +408,7 @@ jobs:
         
         env:
           SPEC: 'cypress/e2e/*.cy.js'
-          SPLIT: ${{ strategy.job-total }}          
+          SPLIT: 4        
           SPLIT_INDEX: ${{ strategy.job-index }}          
           DEBUG: 'cypress-split'
 
@@ -428,10 +428,11 @@ jobs:
         with:
           version: 'v1.30.0'
 
-      - name: Setup kind        
-        uses: engineerd/setup-kind@v0.6.0
-        with:
-          version: "v0.24.0"
+      - name: Install kind
+        run: |
+          curl -Lo kind https://kind.sigs.k8s.io/dl/v0.24.0/kind
+          chmod +x kind
+          sudo mv kind /usr/local/bin/
 
       - name: Create kind cluster
         run: |
