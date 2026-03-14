@@ -268,10 +268,16 @@ jobs:
             --reporter mochawesome \
             --reporter-options reportDir=results,overwrite=false,html=false,json=true
     
+    - name: Extract spec name
+      id: specname
+      run: |
+        SPEC_FILE=$(basename "${{ matrix.spec }}")
+        echo "name=$SPEC_FILE" >> $GITHUB_OUTPUT
+    
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: cypress-artifacts
+        name: results-${{ steps.specname.outputs.name }}
         path:  |
           results
           cypress/videos
