@@ -46,7 +46,7 @@ jobs:
     needs: build-image
     runs-on: ubuntu-latest
     container:
-      image: ${IMAGE_NAME}:${{ github.sha }}
+      image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
 
@@ -103,7 +103,7 @@ jobs:
     needs: build-image
     runs-on: ubuntu-latest
     container:
-      image: ${IMAGE_NAME}:${{ github.sha }}
+      image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -162,7 +162,7 @@ jobs:
       - create-queue
     runs-on: ubuntu-latest
     container:
-      image: ${IMAGE_NAME}:${{ github.sha }}
+      image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -230,7 +230,7 @@ jobs:
     needs: find-specs
     runs-on: ubuntu-latest
     container:
-      image: ${IMAGE_NAME}:${{ github.sha }}
+      image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -338,7 +338,7 @@ jobs:
     needs: build-image
     runs-on: ubuntu-latest  
     container:
-      image: ${IMAGE_NAME}:${{ github.sha }}
+      image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
@@ -371,7 +371,7 @@ jobs:
     needs: build-image
     runs-on: ubuntu-24.04
     container:
-      image: ${IMAGE_NAME}:${{ github.sha }}
+      image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
