@@ -9,8 +9,7 @@ on:
       - main
 
 env:
-  IMAGE_NAME: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app
-  #RUN_CYPRESS_CLUSTER: "true"
+  IMAGE_NAME: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app  
 
 jobs:
   # -----------------------------
@@ -241,6 +240,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4    
 
+    - name: Clean old test reports
+      run: rm -f results/junit.xml 
+    
     - name: Start App
       
       run: |        
@@ -269,8 +271,11 @@ jobs:
     - name: Upload results
       uses: actions/upload-artifact@v4
       with:
-        name: results-${{ matrix.spec }}
-        path: results
+        name: cypress-artifacts
+        path:  |
+          results
+          cypress/videos
+          cypress/screenshots
 
 # ------------------------------------------------
 # MERGE TEST REPORTS
