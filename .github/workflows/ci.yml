@@ -40,7 +40,7 @@ jobs:
   # -----------------------------
   # CYPRESS TESTS
   # -----------------------------
-  cypress-run-serial:
+  cypress-serial:
       needs: build-image
       runs-on: ubuntu-latest
       container:
@@ -97,7 +97,7 @@ jobs:
             cypress/videos
             cypress/screenshots
 
-  cypress-parallel-run-with-cypress-split:
+  cypress-parallel-split:
     needs: build-image
     runs-on: ubuntu-latest
     container:
@@ -131,10 +131,10 @@ jobs:
           npx cypress run \
           --browser chrome \
           --headless \
-          --env SPLIT=4,SPLIT_INDEX=${{ matrix.machine }} \
+          --env SPLIT=true,SPLIT_INDEX=${{ matrix.machine }},splitTotal=4 \
           --spec "cypress/e2e/*.cy.js"
     
-  create-queue:
+  cypress-queue-create:
     runs-on: ubuntu-latest
 
     outputs:
@@ -154,17 +154,17 @@ jobs:
           name: spec-queue
           path: spec-queue.txt
   
-  cypress-parallel-dynamic-runner:
+  cypress-parallel-dynamic-queue-pull:
     needs: 
       - build-image
-      - create-queue
+      - cypress-queue-create
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app:${{ github.sha }}
     strategy:
       fail-fast: false
       matrix:
-        runner: [1,2,3,4]
+        runner: [1,2]
 
     steps:
     - uses: actions/checkout@v4
@@ -206,7 +206,7 @@ jobs:
             --headless
         done  
 
-  find-specs:    
+  cypress-specs-find:    
     runs-on: ubuntu-latest
 
     outputs:
@@ -223,9 +223,9 @@ jobs:
           echo "specs=$SPECS" >> $GITHUB_OUTPUT
           echo "Detected and sorted specs: $SPECS"
   
-  cypress-parallel-without-cypress-split:
+  cypress-parallel-per-spec:
     needs: 
-      - find-specs
+      - cypress-specs-find
       - build-image
     runs-on: ubuntu-latest
     container:
@@ -233,7 +233,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        spec: ${{ fromJson(needs.find-specs.outputs.specs) }}
+        spec: ${{ fromJson(needs.cypress-specs-find.outputs.specs) }}
         
     steps:
     - uses: actions/checkout@v4    
@@ -285,7 +285,7 @@ jobs:
 # MERGE TEST REPORTS
 # ------------------------------------------------
   merge-reports:
-    needs: cypress-parallel-without-cypress-split
+    needs: cypress-parallel-per-spec
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app:${{ github.sha }}
@@ -354,7 +354,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        machine: [0,1,2,3]
+        machine: [0,1]
 
     steps:
     - uses: actions/checkout@v4    
@@ -370,13 +370,9 @@ jobs:
     - name: Run Cypress
       run: |
         if [ "${{ matrix.machine }}" = "0" ]; then
-          npx cypress run --spec "cypress/e2e/Login_test.cy.js"
+          npx cypress run --spec "cypress/e2e/Login_test.cy.js,cypress/e2e/Dashboard_test.cy.js"
         elif [ "${{ matrix.machine }}" = "1" ]; then
-          npx cypress run --spec "cypress/e2e/Dashboard_test.cy.js"
-        elif [ "${{ matrix.machine }}" = "2" ]; then
-          npx cypress run --spec "cypress/e2e/Form_test.cy.js"
-          else
-          npx cypress run --spec "cypress/e2e/Utils_test.cy.js"
+          npx cypress run --spec "cypress/e2e/Form_test.cy.js,cypress/e2e/Utils_test.cy.js"        
         fi        
 
   cypress-parallel-with-github-actions:
@@ -408,14 +404,15 @@ jobs:
         
         env:
           SPEC: 'cypress/e2e/*.cy.js'
-          SPLIT: 4        
-          SPLIT_INDEX: ${{ strategy.job-index }}          
+          SPLIT: 'true'    
+          SPLIT_INDEX: ${{ strategy.job-index }}
+          splitTotal: 4
           DEBUG: 'cypress-split'
 
   # ------------------------------------------------
 # CYPRESS TEST IN KUBERNETES
 # ------------------------------------------------
-  cypress-cluster:
+  cypress-kubernetes-cluster:
     needs: build-image    
     runs-on: ubuntu-latest
     #container:
@@ -428,11 +425,10 @@ jobs:
         with:
           version: 'v1.30.0'
 
-      - name: Install kind
-        run: |
-          curl -Lo kind https://kind.sigs.k8s.io/dl/v0.24.0/kind
-          chmod +x kind
-          sudo mv kind /usr/local/bin/
+      - name: Setup kind
+        uses: engineerd/setup-kind@v0.6.0
+        with:
+          version: v0.24.0
 
       - name: Create kind cluster
         run: |
@@ -476,7 +472,7 @@ jobs:
 # MERGE REPORTS Cypress in Cluster
 # -----------------------------
   merge-reports-cluster:
-    needs: cypress-cluster
+    needs: cypress-kubernetes-cluster
     runs-on: ubuntu-latest
 
     steps:

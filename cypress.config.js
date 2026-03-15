@@ -30,13 +30,13 @@ module.exports = defineConfig({
     supportFile: "cypress/support/e2e.js",
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
 
-    setupNodeEvents(on, config) {      
-      console.log("ENV:", config.env)
-      const split = Number(config.env.SPLIT)
-
-      if (!Number.isNaN(split) && split > 0) {
-        console.log("Split:", split, "Index:", config.env.splitIndex, "/", config.env.splitTotal)
+    setupNodeEvents(on, config) {
+      if (config.env.SPLIT === 'true' || config.env.SPLIT === true) {
+        console.log('SPLIT is set, loading cypress-split plugin')     
         cypressSplit(on, config)
+      }
+      else {
+        console.log('SPLIT is not set, skipping cypress-split plugin')
       }
       return config;
     }
