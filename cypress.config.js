@@ -31,7 +31,7 @@ module.exports = defineConfig({
     specPattern: "cypress/e2e/**/*.cy.{js,ts}",
 
     setupNodeEvents(on, config) {
-      if (config.env.SPLIT === 'true' || config.env.SPLIT === true) {
+      if (config.env.SPLIT === 'true') {
         console.log('SPLIT is set, loading cypress-split plugin')     
         cypressSplit(on, config)
       }
