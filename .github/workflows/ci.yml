@@ -115,7 +115,7 @@ jobs:
         npm ci
         npm install cypress-split --save-dev
         npm i -D cypress-split        
-        npm install        
+                
         npm start &   # App im Hintergrund
         npx wait-on http://localhost:3000    
     
@@ -467,13 +467,22 @@ jobs:
         run: |          
           kubectl apply -f k8s/cypress-github-job.yml
 
+      - name: Debug cluster
+        run: |
+          kubectl get jobs -A
+          kubectl get pods -A
+
       - name: Wait for Job
         run: |
-          kubectl wait --for=condition=complete job/cypress-run --timeout=600s
+          kubectl wait \
+          --for=condition=complete \
+          job/cypress-run \
+          --namespace cypress-e2e \
+          --timeout=600s
 
       - name: Show pod logs
         run: |
-          kubectl logs -l job-name=cypress-run
+          kubectl logs -n cypress-e2e -l job-name=cypress-run
 
   # -----------------------------
 # MERGE REPORTS Cypress in Cluster
