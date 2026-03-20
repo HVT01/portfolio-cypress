@@ -212,8 +212,7 @@ jobs:
     - name: Start App
       
       run: |        
-        npm ci                
-        npm install        
+        npm ci             
         npm start &   # App im Hintergrund
         npx wait-on http://localhost:3000    
     
@@ -267,12 +266,10 @@ jobs:
 
       - name: Install report tools
         run: |
-          npm install mochawesome mochawesome-merge mochawesome-report-generator
-          npm install
+          npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator          
 
       - name: Merge reports and generate HTML
-        run: |
-          npm install mochawesome mochawesome-merge mochawesome-report-generator
+        run: |          
           npx mochawesome-merge reports/**/*.json > merged-report.json
           npx mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
 
@@ -413,7 +410,7 @@ jobs:
 
       - name: Merge reports
         run: |
-          npm install mochawesome mochawesome-merge mochawesome-report-generator
+          npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator
           npx mochawesome-merge reports/**/*.json > merged-report.json
           npx mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
 

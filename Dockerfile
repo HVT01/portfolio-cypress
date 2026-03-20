@@ -21,7 +21,6 @@ RUN npm ci
 RUN npx cypress install
 RUN npm install --save-dev wait-on
 RUN npm install cypress-split --save-dev
-RUN npm install
 # ----------------------------------
 # Restlichen Code kopieren
 # ----------------------------------
