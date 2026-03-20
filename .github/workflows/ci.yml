@@ -248,47 +248,28 @@ jobs:
           cypress/videos
           cypress/screenshots
 
-# ------------------------------------------------
-# MERGE TEST REPORTS
-# ------------------------------------------------
-  merge-reports:
-    needs: cypress-parallel-per-spec
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/thanhtrungtran-testautomation/portfolio-cypress/app:${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v4
+    - name: Merge reports and generate HTML
+      run: |
+        npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator
+        ./node_modules/.bin/mochawesome-merge reports/**/*.json > merged-report.json
+        ./node_modules/.bin/mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
 
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: reports
+    - name: Upload final report
+      uses: actions/upload-artifact@v4
+      with:
+        name: final-report
+        path: final-report
 
-      - name: Install report tools
-        run: |
-          npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator          
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
 
-      - name: Merge reports and generate HTML
-        run: |          
-          npx mochawesome-merge reports/**/*.json > merged-report.json
-          npx mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: site
 
-      - name: Upload final report
-        uses: actions/upload-artifact@v4
-        with:
-          name: final-report
-          path: final-report
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4      
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4      
 
   cypress-parallel-static-runner:
     needs: build-image
@@ -408,11 +389,11 @@ jobs:
             kubectl cp cypress-e2e/$POD:/app/results ./reports/$POD || true
           done
 
-      - name: Merge reports
+      - name: Merge reports and generate HTML
         run: |
           npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator
-          npx mochawesome-merge reports/**/*.json > merged-report.json
-          npx mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
+          ./node_modules/.bin/mochawesome-merge reports/**/*.json > merged-report.json
+          ./node_modules/.bin/mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
