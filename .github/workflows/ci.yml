@@ -249,18 +249,15 @@ jobs:
           cypress/screenshots
 
     - name: Merge reports and generate HTML
-      run: |
-        npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator
-        echo "=== DEBUG REPORT FILES ==="
-        find . -name "*.json"
-        npx mochawesome-merge reports/**/results/*.json > merged-report.json
-        npx mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
+      run: |        
+        npx mochawesome-merge results/*.json -o results/merged-report.json
+        npx mochawesome-report-generator results/merged-report.json --reportDir results --reportFilename report --inline
 
     - name: Upload final report
       uses: actions/upload-artifact@v4
       with:
         name: final-report
-        path: final-report
+        path: results
 
     - name: Setup Pages
       uses: actions/configure-pages@v5
@@ -268,7 +265,7 @@ jobs:
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: site
+        path: results
 
     - name: Deploy to GitHub Pages
       uses: actions/deploy-pages@v4      
@@ -393,14 +390,13 @@ jobs:
 
       - name: Merge reports and generate HTML
         run: |
-          npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator
-          npx mochawesome-merge reports/**/results/*.json > merged-report.json
-          npx mochawesome-report-generator merged-report.json --reportDir site --reportFilename index --inline
+          npx mochawesome-merge results/*.json  -o results/merged-report.json
+          npx mochawesome-report-generator results/merged-report.json --reportDir results --reportFilename report --inline
           
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: results
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
